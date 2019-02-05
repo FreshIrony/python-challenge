@@ -17,7 +17,7 @@ with open(budgetCSV, newline="") as csvfile:
         date.append(row[0])
         profit_losses.append(int(row[1]))
     total_months = len(date)
-    print(total_months)
+    #print(total_months)
     #print(date)
 
 #The net total amount of "Profit/Losses" over the entire period
@@ -25,37 +25,54 @@ with open(budgetCSV, newline="") as csvfile:
     net_amount = 0
     for amount in profit_losses:
         net_amount += amount
-    print(net_amount)
+    #print(net_amount)
     #print(profit_losses)
 
 #The average of the changes in "Profit/Losses" over the entire period
     change = []
-    last_row = profit_losses[1]
+    last_row = profit_losses[0]
     for amount in profit_losses:
         new_amount = amount - last_row
         change.append(new_amount)
         last_row = amount
 
-    print(change)
-    #avgchange = sum(change) / len(change)
-    #print(avgchange)
+    change.pop(0)
+    avg_change = round(sum(change) / len(change), 2)
+    #print(avg_change)
+    #print(change)
 
 #The greatest increase in profits (date and amount) over the entire period
-    #loop through each row, potentially use a max function
-
-#print(max(change))
+    greatest_increase = max(change)
+    increase_index = int(change.index(greatest_increase))
+    date_increase = date[increase_index + 1]
+    #print(date_increase)
+    #print(increase_index)
+    #print(greatest_increase)
 
 #The greatest decrease in losses (date and amount) over the entire period
-    #loop through each row, potentially use a min function
-
-#print(min(change))
+    greatest_decrease = min(change)
+    decrease_index = int(change.index(greatest_decrease))
+    date_decrease = date[decrease_index + 1]
+    #print(date_decrease)
+    #print(decrease_index)
+    #print(greatest_decrease)
 
 #In addition, your final script should both print the analysis to the terminal and export a text file with the results.
+    def print_results():
+        print("Financial Analysis")
+        print("----------------------------")
+        print(f"Total Months: {total_months}")
+        print(f"Total: ${net_amount}")
+        print(f"Average Change: ${avg_change}")
+        print(f"Greatest Increase in Profits: {date_increase} (${greatest_increase})")
+        print(f"Greatest Decrease in Profits: {date_decrease} (${greatest_decrease})")
+    print_results()
 
-#total_months = skip header, count number of rows
-
-
-#net_amount = 
-#avg_change = 
-#greatest_increase = 
-#greatest_decrease = 
+output_file = open('PyBank_Results.txt', 'w')
+output_file.write(f"Financial Analysis\n" 
+    "----------------------------\n"
+    "Total Months: " {total_months})
+    #"Total: ${net_amount}\n"
+    #"Average Change: ${avg_change}\n"
+    #"Greatest Increase in Profits: {date_increase} (${greatest_increase})\n"
+    #"Greatest Decrease in Profits: {date_decrease} (${greatest_decrease})")
