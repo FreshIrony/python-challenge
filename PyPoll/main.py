@@ -1,31 +1,54 @@
-import os 
+import os
 import csv
 
-budgetCSV = os.path.join("..", "PyPoll", "election_data.csv")
+election_csv = os.path.join("..", "PyPoll", "election_data.csv")
 
-
-#You will be give a set of poll data called election_data.csv. The dataset is composed of three columns: Voter ID, County, and Candidate. 
-#Your task is to create a Python script that analyzes the votes and calculates each of the following:
-
-#The total number of votes cast
 voter_id = []
 county = []
-candidate = []
+candidates = []
 
-with open(budgetCSV, newline="") as csvfile:
-    csv_reader = csv.reader(csvfile, delimiter=",")
-    next(csv_reader, None)
-    for row in csv_reader:
+with open(election_csv, newline='') as csvfile:
+    csvreader = csv.reader(csvfile, delimiter=',')
+    csv_header = next(csvreader, None)
+    for row in csvreader:
         voter_id.append(row[0])
         county.append(row[1])
-        candidate.append(row[2])
-    total_votes = len(voter_id)
-    print(total_votes)
-    #print(voter_id)
-    #print(county)
-    #print(candidate)
+        candidates.append(row[2])
+    
+unique_candidates = list(sorted(set(candidates)))
+#print(unique_candidates)
+    
+total_votes = len(voter_id)
+#print(total_votes)
 
-#A complete list of candidates who received votes
-#The percentage of votes each candidate won
-#The total number of votes each candidate won
-#The winner of the election based on popular vote.
+votes_won = []
+for candidate in unique_candidates:
+    votes_won.append(candidates.count(candidate))
+#print(votes_won)
+
+percent_won = []
+for votes in votes_won:
+    percent = (votes / total_votes) * 100
+    percent_won.append(round(percent, 2))
+#print(percent_won)
+
+standings = zip(unique_candidates, percent_won, votes_won)
+sorted_standings = sorted(standings, key=lambda x: int(x[2]), reverse = True)
+#print(sorted_standings)
+
+election_results = (f"Election Results\n"
+                    "-------------------------\n"
+                    f"Total Votes: {total_votes}\n"
+                    f"-------------------------\n"
+                    f"{sorted_standings[0][0]}: {sorted_standings[0][1]}% ({sorted_standings[0][2]})\n"
+                    f"{sorted_standings[1][0]}: {sorted_standings[1][1]}% ({sorted_standings[1][2]})\n"
+                    f"{sorted_standings[2][0]}: {sorted_standings[2][1]}% ({sorted_standings[2][2]})\n"
+                    f"{sorted_standings[3][0]}: {sorted_standings[3][1]}% ({sorted_standings[3][2]})\n"
+                    f"-------------------------\n"
+                    f"Winner: {sorted_standings[0][0]}\n"
+                    f"-------------------------")
+
+print(election_results)
+
+output_file = open('PyPoll_Results.txt', 'w')
+output_file.write(election_results)
